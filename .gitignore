@@ -16,3 +16,7 @@ config.env
 ./postTemplates/*
 ./mainbakup
 mainbackup
+./*.XML
+*.XML
+./weps/*.*
+./weps/*
