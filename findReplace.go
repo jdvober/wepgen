@@ -1,7 +1,7 @@
-package main
-
 import (
+	"github.com/nguyenthenguyen/docx"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -9,7 +9,6 @@ import (
 	"github.com/jdvober/gauth"
 	"github.com/jdvober/gsheets"
 	"github.com/joho/godotenv"
-	"github.com/nguyenthenguyen/docx"
 )
 
 
@@ -56,8 +55,7 @@ func main() {
 	data := gsheets.GetValues(client, giftedSSID, "Sheet1!A2:O")
 
 	// Iterate through data and format for paste in WEP Template Google Sheet
-	// profiles := make([]Student, len(data))
-	profiles := []Student{}
+	profiles := make([]Student, len(data))
 	for i := range data {
 		// Create student profile
 		profile := Student{
@@ -109,9 +107,10 @@ func makeFiles(profiles []Student) {
 			os.Mkdir("./weps/", 0777)
 		}
 		// Specify the correct template
-		templateFile := "./templates/Honors.docx"
 		if profile.AP == "true" {
-			templateFile = "./templates/AP.docx"
+			templateFile := "./templates/AP.docx"
+		} else {
+			templateFile := "./templates/Honors.docx"
 		}
 		replaceAndCreate(templateFile, filename, profile)
 	}
@@ -135,6 +134,6 @@ func replaceAndCreate(templateFile string, filename string, profile Student) {
 	newDocx.Replace("$ACADEMIC$", profile.academic, -1)
 	newDocx.WriteToFile("./weps/" + filename)
 
-	t.Close()
+	r.Close()
 	fmt.Printf(" Done.\n")
 }
